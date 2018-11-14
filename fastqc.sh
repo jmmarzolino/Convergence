@@ -15,7 +15,7 @@ module load picard
 module load fastqc/0.11.7
 
 WORKINGDIR=/rhome/jmarz001/shared/SEQ_RUNS/10_17_2018/FASTQ
-RESULTSDIR=/rhome/jmarz001/bigdata/convergent_evolution/scripts
+RESULTSDIR=/rhome/jmarz001/bigdata/convergent_evolution/fastqcs
 cd $WORKINGDIR
 
 for file in $WORKINGDIR/*.fastq
