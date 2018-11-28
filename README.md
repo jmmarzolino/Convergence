@@ -58,17 +58,17 @@ UCRKL000267   CCXXI Davis F11
 267_S234_L004_R1_001.fastq.gz  
 267_S234_L004_R2_001.fastq.gz  
   
-###Scripts  
+### Scripts  
   
-####prep.sh  
+#### prep.sh  
 move the files from their SEQ_RUN storage into the project data directory and unzip them  
 
-####fastq_qc.sh  
+#### fastq_qc.sh  
 generate fastqc (quality) data from the raw fastq files, store them in the fastqc directory  
   
-####trim.sh  
+#### trim.sh  
 trim the reads based on length, quality, sliding window &etc.  
 
-####trim_qc.sh  
+#### trim_qc.sh  
 generate fastqc data from trimmed fastq files, stored in subdirectory of fastqc dir  
 
