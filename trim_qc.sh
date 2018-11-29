@@ -18,12 +18,19 @@ module load fastqc/0.11.7
 # <fastqc somefile.txt someotherfile.txt --outdir=/some/other/dir/ -t 6 -q>
 
 #pipe all file names into fastqc using ls (fed wildcard for files), tell fastqc to use stdin (ie. the files fed from pipe)
-WORKINGDIR=/rhome/jmarz001/bigdata/CCXXIRAD/trim
-RESULTSDIR=/rhome/jmarz001/bigdata/CCXXIRAD/trim/fastqc
+WORKINGDIR=/rhome/jmarz001/bigdata/convergent_evolution/data/trim_files
+RESULTSDIR=/rhome/jmarz001/bigdata/convergent_evolution/quality/trim
+SEQLIST=/rhome/jmarz001/bigdata/convergent_evolution/args/trimfq_qcseqs
 cd $WORKINGDIR
+ls *.fq > $SEQLIST
 
-for file in $WORKINGDIR/*.fq
-do
-  #gunzip "$file"
-  fastqc "$file" --outdir=$RESULTSDIR/"$file_qual" -t 6 -q
-done
+# get filenames from list
+FILE=$(head -n $SLURM_ARRAY_TASK_ID $SEQLIST | tail -n 1)
+# get basename of file, stripping at "."
+#10_L003_1_trimmed_paired.fq
+#10_L003_1_unpaired.fq
+NAME=$(basename "$FILE" | cut -d. -f1)
+#==10_L003_1_trimmed_paired
+#==10_L003_1_unpaired
+
+fastqc $NAME.fq --outdir=$RESULTSDIR/"$NAME_qc" -t 6 -q

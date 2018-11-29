@@ -8,24 +8,26 @@
 #SBATCH -p short
 
 DIR=/rhome/jmarz001/bigdata/convergent_evolution/data
+RES=/rhome/jmarz001/bigdata/convergent_evolution/args
 cd $DIR
+printf "RAW FASTQ's \n" >> $RES/file_reads
 
-for file in $DIR/*
+
+for file in $DIR/*.fastq
 do
-  
+  printf "$file \t" >> $RES/file_reads
+  grep -c "^@" $file | wc -l >> $RES/file_reads
+  printf "\n" >> $RES/file_reads
 done
 
-printf "HvRADA2 \n" > $DIR/flowcell_reads
-grep "^@" HvRADA2_S8_L008_R1_001.fastq | wc -l >> $DIR/flowcell_reads
 
-printf "HvRADP3 \n" >> $DIR/flowcell_reads
-grep "^@" HvRADP3_S5_L005_R1_001.fastq | wc -l >> $DIR/flowcell_reads
+DIR=/rhome/jmarz001/bigdata/convergent_evolution/data/trim_files
+cd $DIR
+printf "\n Trimmed Files \n"
 
-printf "HvRADO2 \n" >> $DIR/flowcell_reads
-grep "^@" HvRADO2_S7_L007_R1_001.fastq | wc -l >> $DIR/flowcell_reads
-
-printf "HvRADY3 \n" >> $DIR/flowcell_reads
-grep "^@" HvRADY3_S6_L006_R1_001.fastq | wc -l >> $DIR/flowcell_reads
-
-
-#next time remember that you can just grep -c to count instead of finding seqs and piping it to word count -l
+for file in $DIR/*.fastq
+do
+  printf "$file \t" >> $RES/file_reads
+  grep -c "^@" $file | wc -l >> $RES/file_reads
+  printf "\n" >> $RES/file_reads
+done

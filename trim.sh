@@ -1,6 +1,6 @@
 #!/bin/bash -l
 
-#SBATCH -p batch
+#SBATCH -p koeniglab
 #SBATCH --ntasks=6
 #SBATCH --mem=90G
 #SBATCH --time=10:00:00
@@ -23,22 +23,18 @@ ls *.fastq > $SEQLIST
 # get filenames from list
 FILE=$(head -n $SLURM_ARRAY_TASK_ID $SEQLIST | tail -n 1)
 # get basename of file, stripping at "."
-#267_S234_L003_R1_001.fastq.gz
-#267_S234_L003_R2_001.fastq.gz
-#267_S234_L004_R1_001.fastq.gz
-#267_S234_L004_R2_001.fastq.gz
-# == 267_S234_L003_R1_001
-NAME=$(basename "$FILE" | cut -d. -f1)
-#267_S234_L003_R1_001.fastq.gz
-#267_S234_L003_R2_001.fastq.gz
-#267_S234_L004_R1_001.fastq.gz
-#267_S234_L004_R2_001.fastq.gz
-# == 267_L003/4_R1/2
-SHORT=$(basename "$NAME" | cut -d_ -f1-3)
+#267_S234_L003_R1_001.fastq
+#267_S234_L003_R2_001.fastq
+#267_S234_L004_R1_001.fastq
+#267_S234_L004_R2_001.fastq
+# == 267_S234_L003(_R1_001)
+NAME=$(basename "$FILE" | cut -d. -f1 | cut -d_ -f1-3)
+# == 267_L003/4
+SHORT=$(basename "$NAME" | cut -d_ -f1,3)
 
 # Quality/Adapter trimming
 java -jar $TRIMMOMATIC PE -threads 6 \
-$WORKINGDIR/"$SHORT"_R1_001.fastq $WORKINGDIR/"$SHORT"_R2_001.fastq \
+$WORKINGDIR/"$NAME"_R1_001.fastq $WORKINGDIR/"$NAME"_R2_001.fastq \
 $RESULTSDIR/"$SHORT"_1_trimmed_paired.fq $RESULTSDIR/"$SHORT"_1_unpaired.fq \
 $RESULTSDIR/"$SHORT"_2_trimmed_paired.fq $RESULTSDIR/"$SHORT"_2_unpaired.fq \
 ILLUMINACLIP:"$ADAPTERDIR"/PE_all.fa:2:30:10 \
