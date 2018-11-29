@@ -16,5 +16,7 @@ RESULTSDIR=/rhome/jmarz001/bigdata/convergent_evolution
 for file in $WORKINGDIR/*.fastq.gz
 do
   cp "$file" $RESULTSDIR/data/
-  gunzip $RESULTSDIR/data/"$file"
 done
+
+cd $RESULTSDIR
+gunzip *
