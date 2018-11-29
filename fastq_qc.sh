@@ -13,7 +13,7 @@ module load picard
 module load fastqc/0.11.7
 
 WORKINGDIR=/rhome/jmarz001/bigdata/convergent_evolution/data
-RESULTSDIR=/rhome/jmarz001/bigdata/convergent_evolution/fastqcs
+RESULTSDIR=/rhome/jmarz001/bigdata/convergent_evolution/quality/fastq_qc
 
 for file in $WORKINGDIR/*.fastq
 do
