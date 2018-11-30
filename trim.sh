@@ -1,9 +1,9 @@
 #!/bin/bash -l
 
 #SBATCH -p koeniglab
-#SBATCH --ntasks=6
-#SBATCH --mem=90G
-#SBATCH --time=10:00:00
+#SBATCH --ntasks=8
+#SBATCH --mem=200G
+#SBATCH --time=24:00:00
 #SBATCH --output=/rhome/jmarz001/bigdata/convergent_evolution/scripts/trim.out
 #SBATCH --job-name='trim'
 #SBATCH --array=1-36
@@ -33,7 +33,7 @@ NAME=$(basename "$FILE" | cut -d. -f1 | cut -d_ -f1-3)
 SHORT=$(basename "$NAME" | cut -d_ -f1,3)
 
 # Quality/Adapter trimming
-java -jar $TRIMMOMATIC PE -threads 6 \
+java -jar $TRIMMOMATIC PE -threads 6 -trimlog trimlog\
 $WORKINGDIR/"$NAME"_R1_001.fastq $WORKINGDIR/"$NAME"_R2_001.fastq \
 $RESULTSDIR/"$SHORT"_1_trimmed_paired.fq $RESULTSDIR/"$SHORT"_1_unpaired.fq \
 $RESULTSDIR/"$SHORT"_2_trimmed_paired.fq $RESULTSDIR/"$SHORT"_2_unpaired.fq \

@@ -1,15 +1,12 @@
 #!/bin/bash -l
 
 #SBATCH -p koeniglab
-#SBATCH --nodes=1
 #SBATCH --ntasks=6
-#SBATCH --cpus-per-task=1
-#SBATCH --mem-per-cpu=20G
-#SBATCH --time=40:00:00
-#SBATCH --output=/rhome/jmarz001/bigdata/CCXXIRAD/Scripts/trim_fastqc.stdout
-#SBATCH --mail-user=jmarz001@ucr.edu
-#SBATCH --mail-type=ALL
-#SBATCH --job-name='rad_trim_fastqc'
+#SBATCH --mem=120G
+#SBATCH --time=72:00:00
+#SBATCH --output=/rhome/jmarz001/bigdata/convergent_evolution/scripts/trim_qc.stdout
+#SBATCH --job-name='trim_fastqc'
+#SBATCH --array=1-150
 
 module load java/7u40
 module load fastqc/0.11.7
@@ -33,4 +30,5 @@ NAME=$(basename "$FILE" | cut -d. -f1)
 #==10_L003_1_trimmed_paired
 #==10_L003_1_unpaired
 
-fastqc $NAME.fq --outdir=$RESULTSDIR/"$NAME_qc" -t 6 -q
+fastqc $NAME.fq --outdir=$RESULTSDIR/$NAME -t 6 -q
+unzip $RESULTSDIR/$NAME
