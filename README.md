@@ -63,11 +63,19 @@ UCRKL000267   CCXXI Davis F11
 #### prep.sh  
 move the files from their SEQ_RUN storage into the project data directory and unzip them  
 
+#### fq.seq.sh  
+count the number of reads in each unzipped fastq file  
+  in future, would like to add lines to add reads together per population and per sequencing lane (for now done manually)  
+
 #### fastq_qc.sh  
 generate fastqc (quality) data from the raw fastq files, store them in the fastqc directory  
   
 #### trim.sh  
 trim the reads based on length, quality, sliding window &etc.  
+
+#### trim.seqs.sh  
+count the number of reads in each trimmed file  
+  in future, should add code to print retained reads (print reads in trimmed files, intake fq.seq.sh reads, and divide to produce percent retained reads)   
 
 #### trim_qc.sh  
 generate fastqc data from trimmed fastq files, stored in subdirectory of fastqc dir  
