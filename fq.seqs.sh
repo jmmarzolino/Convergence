@@ -11,10 +11,11 @@
 DIR=/rhome/jmarz001/bigdata/convergent_evolution/data
 RES=/rhome/jmarz001/bigdata/convergent_evolution/args
 cd $DIR
-SEQLIST=/rhome/jmarz001/bigdata/convergent_evolution/args/fastq_trim_seqs
+SEQLIST=/rhome/jmarz001/bigdata/convergent_evolution/args/fastq_files
+ls *.fastq > $SEQLIST
 
 # get filenames from list
 FILE=$(head -n $SLURM_ARRAY_TASK_ID $SEQLIST | tail -n 1)
 
 COUNT=$(grep -c "^@" $FILE)
-printf "$FILE \t $COUNT \n" >> $RES/file_reads
+printf "$FILE \t $COUNT \n" >> $RES/fastq_reads

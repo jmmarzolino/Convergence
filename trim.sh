@@ -16,7 +16,7 @@ ADAPTERDIR=/rhome/cfisc004/software/Trimmomatic-0.36/adapters
 
 WORKINGDIR=/rhome/jmarz001/bigdata/convergent_evolution/data
 RESULTSDIR=/rhome/jmarz001/bigdata/convergent_evolution/data/trim_files
-SEQLIST=/rhome/jmarz001/bigdata/convergent_evolution/args/fastq_trim_seqs
+SEQLIST=/rhome/jmarz001/bigdata/convergent_evolution/args/fastq_files
 cd $WORKINGDIR
 ls *.fastq > $SEQLIST
 
@@ -33,9 +33,9 @@ NAME=$(basename "$FILE" | cut -d. -f1 | cut -d_ -f1-3)
 SHORT=$(basename "$NAME" | cut -d_ -f1,3)
 
 # Quality/Adapter trimming
-java -jar $TRIMMOMATIC PE -threads 6 -trimlog trimlog\
+java -jar $TRIMMOMATIC PE -threads 6 \
 $WORKINGDIR/"$NAME"_R1_001.fastq $WORKINGDIR/"$NAME"_R2_001.fastq \
 $RESULTSDIR/"$SHORT"_1_trimmed_paired.fq $RESULTSDIR/"$SHORT"_1_unpaired.fq \
 $RESULTSDIR/"$SHORT"_2_trimmed_paired.fq $RESULTSDIR/"$SHORT"_2_unpaired.fq \
 ILLUMINACLIP:"$ADAPTERDIR"/PE_all.fa:2:30:10 \
-LEADING:5 TRAILING:5 SLIDINGWINDOW:4:20 MINLEN:36
+SLIDINGWINDOW:4:20 MINLEN:75 #or 100
