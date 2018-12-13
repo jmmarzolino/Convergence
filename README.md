@@ -60,15 +60,20 @@ UCRKL000267   CCXXI Davis F11
   
 ### Scripts  
   
+##### barcode.py  
+attempt to split the fastq files by barcode, uncertain if it works
+  
 #### prep.sh  
 move the files from their SEQ_RUN storage into the project data directory and unzip them  
 
-#### fq.seq.sh  
+#### fq.seqs.sh  
 count the number of reads in each unzipped fastq file  
   in future, would like to add lines to add reads together per population and per sequencing lane (for now done manually)  
 
 #### fastq_qc.sh  
 generate fastqc (quality) data from the raw fastq files, store them in the fastqc directory  
+#### unzip.sh  
+unzips the fastq-fastqc files so the files are put in a directory and you can access the quality, etc.  
   
 #### trim.sh  
 trim the reads based on length, quality, sliding window &etc.  
