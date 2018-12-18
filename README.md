@@ -60,7 +60,7 @@ UCRKL000267   CCXXI Davis F11
   
 ### Scripts  
   
-##### barcode.py  
+#### barcode.py  
 attempt to split the fastq files by barcode, uncertain if it works
   
 #### prep.sh  
@@ -85,3 +85,18 @@ count the number of reads in each trimmed file
 #### trim_qc.sh  
 generate fastqc data from trimmed fastq files, stored in subdirectory of fastqc dir  
 
+#### align_and_group.sh  
+align to chromosome split whole genome fasta and assign read groups based on population and lane  
+sort bams and make unmapped files, etc  
+
+#### dupfree.sh  
+mark duplicates in the bam files  
+
+#### snp_caller.sh  
+call snps with freebayes with split genome sections indicated for speed,  
+feed in all files so that snp calls are more accurate, output one vcf file  
+population info can still be used because of read group labels
+
+#### filter.sh  
+filter called snps based on:  
+quality distribution, missing data distribution, % homozygous and heterozygous, depth & heterozygosity, minor allele frequency, allele balance, allele observations, and haplotype variant calls according to proximity  
