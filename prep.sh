@@ -7,10 +7,7 @@
 #SBATCH --output=/rhome/jmarz001/bigdata/convergent_evolution/scripts/prep.out
 #SBATCH --job-name='prep'
 
-# generate fastqc (quality reports)
-# <fastqc somefile.txt someotherfile.txt --outdir=/some/other/dir/ -t # -q>
-
-WORKINGDIR=/rhome/jmarz001/shared/SEQ_RUNS/10_8_2018/FASTQ
+WORKINGDIR=rhome/jmarz001/shared/SEQ_RUNS/10_8_2018/FASTQ/
 RESULTSDIR=/rhome/jmarz001/bigdata/convergent_evolution
 
 for file in $WORKINGDIR/*.fastq.gz

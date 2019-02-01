@@ -28,3 +28,4 @@ java -jar $PICARD MarkDuplicates \
 #  I=$NAME.bam \
 #  O=$NAME.sorted.bam \
 #  SORT_ORDER=coordinate
+
