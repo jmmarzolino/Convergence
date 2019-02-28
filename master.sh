@@ -6,7 +6,7 @@
 #SBATCH --output=/rhome/jmarz001/bigdata/convergent_evolution/scripts/master.stdout
 #SBATCH --job-name="master"
 #SBATCH --partition=koeniglab
-#SBATCH --array=1-31%2
+#SBATCH --array=1-30
 
 module load trimmomatic/0.36 bwa samtools bedtools picard
 TRIMMOMATIC=/opt/linux/centos/7.x/x86_64/pkgs/trimmomatic/0.36/trimmomatic.jar
@@ -46,34 +46,113 @@ SAMPLE=$(basename "$NAME" | cut -d_ -f1-3)
 bwa mem -R "@RG\tID:${SEQR}_${SAMPLE}\tSM:${GEN}_pool\tPU:${SAMPLE}_${BAR}\tLB:lib1\tPL:ILLUMINA" -t 10 $INDEX \
 $TRIM/"$NAME"_R1_trim_pair.fq $TRIM/"$NAME"_R2_trim_pair.fq | samtools sort -@ 20 -o $BAM/"$NAME".bam
 # view the header of a bam file to check the read groups are passed on right: samtools view -H 250_S229_L004_001.bam | less
+ls $BAM/*001.bam > /rhome/jmarz001/bigdata/convergent_evolution/args/bam_merge
 
+###################################################
+#!/bin/bash -l
+#SBATCH --ntasks=12
+#SBATCH --mem-per-cpu=10G
+#SBATCH --time=10-00:00:00
+#SBATCH --output=gatk_snps.stdout
+#SBATCH --job-name="gatk_snp"
+#SBATCH --partition=koeniglab
+#SBATCH --array=1-9
+#
+#SBATCH --array=1-3
+
+module load java picard
 PICARD=/opt/linux/centos/7.x/x86_64/pkgs/picard/2.18.3/lib/picard.jar
-java -jar $PICARD MarkDuplicates \
-  I=$BAM/"$NAME".bam \
-  O=$BAM/"$NAME"_dup_marked.bam \
-  M=$BAM/"$NAME"_dup_metrics.txt
+BAM=/rhome/jmarz001/bigdata/convergent_evolution/data/bam
+SEQLIST=/rhome/jmarz001/bigdata/convergent_evolution/args/bams
+SEQLIST2=/rhome/jmarz001/bigdata/convergent_evolution/args/bams2
+#
+SEQLIST4=/rhome/jmarz001/bigdata/convergent_evolution/args/bams4
+
+
+NAME=$(head -n $SLURM_ARRAY_TASK_ID $SEQLIST | tail -n 1 | cut -d_ -f1)
+FILE1=$(head -n $SLURM_ARRAY_TASK_ID $SEQLIST | tail -n 1 | cut -f1)
+FILE2=$(head -n $SLURM_ARRAY_TASK_ID $SEQLIST | tail -n 1 | cut -f2)
+
+FILE3=$(head -n $SLURM_ARRAY_TASK_ID $SEQLIST | tail -n 1 | cut -f3)
+FILE4=$(head -n $SLURM_ARRAY_TASK_ID $SEQLIST | tail -n 1 | cut -f4)
+
+# is it going to wreck because not every line has 4 columns?
+# --SORT_ORDER -SO	coordinate	Sort order of output file
+java -jar $PICARD MergeSamFiles \
+      I=$BAM/$FILE1.bam \
+      I=$BAM/$FILE2.bam \
+      I=$BAM/$FILE3.bam \
+      I=$BAM/$FILE4.bam \
+      O=$BAM/"$NAME"_pooled_merged.bam
 
 ###################################################
 #!/bin/bash -l
 
 #SBATCH --ntasks=12
-#SBATCH --mem-per-cpu=10G
-#SBATCH --time=200:00:00
-#SBATCH --output=/rhome/jmarz001/bigdata/convergent_evolution/master_snps.stdout
-#SBATCH --job-name="master_snp"
+#SBATCH --mem=220G
+#SBATCH --time=6-00:00:00
+#SBATCH --output=gatk_snps.stdout
+#SBATCH --job-name="gatk_snp"
 #SBATCH --partition=koeniglab
-#SBATCH --array=1-16%2
+#SBATCH --array=1-12
 
-module load freebayes/1.2.0
+module load java gatk/4.0.12.0 samtools picard
+PICARD=/opt/linux/centos/7.x/x86_64/pkgs/picard/2.18.3/lib/picard.jar
+GATK=/opt/linux/centos/7.x/x86_64/pkgs/gatk/4.0.12.0/build/libs/gatk-package-4.0.12.0-20-gf9a2e5c-SNAPSHOT-local.jar
 REF=/rhome/jmarz001/shared/GENOMES/NEW_BARLEY/GENOME_SPLIT/barley_split_reference.fa
-CHR=/rhome/jmarz001/bigdata/CCXXIRAD/calls/chr_splits.txt
-REGION=$(head -n $SLURM_ARRAY_TASK_ID $CHR | tail -n 1)
-
+CHR=/rhome/jmarz001/bigdata/convergent_evolution/small_sample/args/chr_intervals.list
+#
+SEQLIST=/rhome/jmarz001/bigdata/convergent_evolution/args/bams
 BAM=/rhome/jmarz001/bigdata/convergent_evolution/data/bam
-cd $BAM
-ls *_dup_marked.bam > $BAM/files
 SNP=/rhome/jmarz001/bigdata/convergent_evolution/data/calls
-# mkdir $SNP
-# --bam-list also represented by -L
-#freebayes -f [reference] [infiles.bam] > [outfiles.vcf]
-freebayes -k -f $REF -r $REGION -L $BAM/files > $SNP/$REGION.freebayes.snps.vcf
+#
+cd $BAM
+ls *_pooled_merged.bam > $SEQLIST
+FILE=$(head -n $SLURM_ARRAY_TASK_ID $SEQLIST | tail -n 1 | cut -d_ -f1)
+
+java -jar $PICARD MarkDuplicates \
+  I=$BAM/"$FILE"_pooled_merged.bam \
+  O=$BAM/"$FILE"_pool_merge_dup_marked.bam \
+  M=$BAM/"$FILE"_dup_metrics.txt
+
+samtools index $BAM/"$FILE"_pool_merge_dup_marked.bam
+
+for region in $CHR
+do
+gatk HaplotypeCaller -R $REF -L ${region} -I $BAM/"$FILE"_pool_merge_dup_marked.bam -O $SNP/$FILE.g.vcf -ERC GVCF
+done
+###################################################
+
+#!/usr/bin/bash -l
+#SBATCH -p short
+#SBATCH --ntasks=2
+#SBATCH --mem=100G
+#SBATCH --time=2:00:00
+#SBATCH --output=para_first_filter.stdout
+#SBATCH --job-name='para_filter'
+#SBATCH --array=1-12
+
+# genotpye gVCF files > snp calls vcf file
+GATK=/opt/linux/centos/7.x/x86_64/pkgs/gatk/4.0.12.0/build/libs/gatk-package-4.0.12.0-20-gf9a2e5c-SNAPSHOT-local.jar
+REF=/rhome/jmarz001/shared/GENOMES/NEW_BARLEY/GENOME_SPLIT/barley_split_reference.fa
+CHR=/rhome/jmarz001/bigdata/convergent_evolution/small_sample/args/chr_intervals.list
+#
+SEQLIST=/rhome/jmarz001/bigdata/convergent_evolution/args/gvcf
+SNP=/rhome/jmarz001/bigdata/convergent_evolution/data/calls
+cd $SNP
+#
+ls *.g.vcf > $SEQLIST
+FILE=$(head -n $SLURM_ARRAY_TASK_ID $SEQLIST | tail -n 1 | cut -d. -f1)
+
+for region in $CHR
+do
+java -jar $GATK \
+   -T GenotypeGVCFs \
+   --max-alternate-alleles 2 \
+   -newQual
+   -R $REF \
+   -V $FILE.g.vcf \
+   -o "$FILE"_"$region"_raw_calls.vcf
+done
+
+###################################################
