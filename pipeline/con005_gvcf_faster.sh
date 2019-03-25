@@ -1,17 +1,12 @@
 #!/bin/bash -l
 
-#SBATCH --ntasks=10
-#SBATCH --mem=200G
-#SBATCH --time=24:00:00
-
 #SBATCH --ntasks=4
 #SBATCH --mem-per-cpu=10G
 #SBATCH --time=55:00:00
 #SBATCH --output=gatk_split.stdout
-
 #SBATCH --job-name="gatk_snp"
 #SBATCH --partition=koeniglab
-#SBATCH --array=1-12
+#SBATCH --array=1-16
 
 module load java gatk/4.0.12.0 samtools picard
 PICARD=/opt/linux/centos/7.x/x86_64/pkgs/picard/2.18.3/lib/picard.jar
@@ -28,5 +23,28 @@ FILE=$(head -n $SLURM_ARRAY_TASK_ID $SEQLIST | tail -n 1 | cut -d_ -f1)
 
 for region in $CHR
 do
-gatk HaplotypeCaller -R $REF -L ${region} -I $BAM/"$FILE"_pool_merge_dup_marked.bam -O $SNP/$FILE.g.vcf -ERC GVCF
+gatk HaplotypeCaller -R $REF -L ${region} -I $BAM/"$FILE"_pool_merge_dup_marked.bam -O $SNP/$FILE.${i}.g.vcf -ERC GVCF
+i=i+1
 done
+
+10_pool_merge_dup_marked.bam
+  -chr11
+16_pool_merge_dup_marked.bam
+  -chr 10
+1L_pool_merge_dup_marked.bam
+  -chr12
+24_pool_merge_dup_marked.bam
+  -chr11
+250_pool_merge_dup_marked.bam
+  -chr13
+255_pool_merge_dup_marked.bam
+  -chr10
+257_pool_merge_dup_marked.bam
+  -chr10
+258_pool_merge_dup_marked.bam
+  -chr6
+262_pool_merge_dup_marked.bam
+  -chr10
+
+2L_pool_merge_dup_marked.bam
+  -chr13
