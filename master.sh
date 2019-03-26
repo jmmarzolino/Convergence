@@ -122,6 +122,45 @@ do
 gatk HaplotypeCaller -R $REF -L ${region} -I $BAM/"$FILE"_pool_merge_dup_marked.bam -O $SNP/$FILE.g.vcf -ERC GVCF
 done
 ###################################################
+#!/bin/bash -l
+
+#SBATCH --ntasks=12
+#SBATCH --mem=220G
+#SBATCH --time=6-00:00:00
+#SBATCH --output=gatk_snps.stdout
+#SBATCH --job-name="gatk_snp"
+#SBATCH --partition=koeniglab
+#SBATCH --array=1-12
+
+# combine the split-by-genome-region gvcf files into per-population/sample gVCF files
+
+# CombineGVCFs is meant to be used for hierarchical merging of gVCFs that will eventually be input into GenotypeGVCFs. One would use this tool when needing to genotype too large a number of individual gVCFs; instead of passing them all in to GenotypeGVCFs, one would first use CombineGVCFs on smaller batches of samples and then pass these combined gVCFs to GenotypeGVCFs.
+# So don't use CombineGVCFs?
+
+# GatherVcfs (Picard)  Input files must ... not have events at overlapping positions.
+# so you can't use that either
+
+# Picard MergeVcfs can work with overlapping positions, it basically just needs working files
+# will this work with gvcf? I sure hope so
+java -jar picard.jar MergeVcfs \
+          I=input_variants.01.vcf \
+          I=input_variants.02.vcf.gz \
+          O=output_variants.vcf.gz
+
+# Then use GenomicsDBImport to:
+# take in one or more single-sample GVCFs and imports data over at least one genomics interval, and outputs a directory containing a GenomicsDB datastore with combined multi-sample data.
+# GenotypeGVCFs can then read from the created GenomicsDB directly and output the final multi-sample VCF.
+# So if you have a trio of GVCFs your GenomicsDBImport command would look like this, assuming you're running per chromosome (here we're showing the tool running on chromosome 20 and chromosome 21):
+
+gatk GenomicsDBImport \
+    -V data/gvcfs/mother.g.vcf \
+    -V data/gvcfs/father.g.vcf \
+    -V data/gvcfs/son.g.vcf \
+    --genomicsdb-workspace-path my_database \
+    --intervals chr20,chr21
+
+
+###################################################
 
 #!/usr/bin/bash -l
 #SBATCH -p short
