@@ -137,6 +137,7 @@ done
 # CombineGVCFs is meant to be used for hierarchical merging of gVCFs that will eventually be input into GenotypeGVCFs. One would use this tool when needing to genotype too large a number of individual gVCFs; instead of passing them all in to GenotypeGVCFs, one would first use CombineGVCFs on smaller batches of samples and then pass these combined gVCFs to GenotypeGVCFs.
 # So don't use CombineGVCFs?
 
+# normally you would use GatherVcfs when the gvcf was generated per-chromosome, but in this case I have a problem with slight overlapping regions
 # GatherVcfs (Picard)  Input files must ... not have events at overlapping positions.
 # so you can't use that either
 
@@ -147,11 +148,15 @@ java -jar picard.jar MergeVcfs \
           I=input_variants.02.vcf.gz \
           O=output_variants.vcf.gz
 
+
+ls 10_chr*.vcf >
+
+
 # Then use GenomicsDBImport to:
 # take in one or more single-sample GVCFs and imports data over at least one genomics interval, and outputs a directory containing a GenomicsDB datastore with combined multi-sample data.
 # GenotypeGVCFs can then read from the created GenomicsDB directly and output the final multi-sample VCF.
 # So if you have a trio of GVCFs your GenomicsDBImport command would look like this, assuming you're running per chromosome (here we're showing the tool running on chromosome 20 and chromosome 21):
-
+DIR=
 gatk GenomicsDBImport \
     -V data/gvcfs/mother.g.vcf \
     -V data/gvcfs/father.g.vcf \
