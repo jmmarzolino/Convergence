@@ -24,7 +24,7 @@ do
 java -jar $GATK \
    -T GenotypeGVCFs \
    --max-alternate-alleles 2 \
-   -newQual \
+   -newQual #try --new-qual \
    -L $region
    -R $REF \
    -V $FILE.g.vcf \
