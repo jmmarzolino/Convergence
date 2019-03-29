@@ -20,7 +20,7 @@ SNP=/rhome/jmarz001/bigdata/convergent_evolution/data/calls
 cd $BAM
 region=$(head -n $SLURM_ARRAY_TASK_ID $CHR | tail -n 1)
 
-gatk HaplotypeCaller -R $REF -L ${region} --num_threads 4 -I $BAM/10_pool_merge_dup_marked.bam -O $SNP/10_${region}.g.vcf -ERC GVCF
+gatk HaplotypeCaller -R $REF -L ${region} -I $BAM/10_pool_merge_dup_marked.bam -O $SNP/10_${region}.g.vcf -ERC GVCF
 
 
 10_pool_merge_dup_marked.bam
@@ -49,7 +49,7 @@ SNP=/rhome/jmarz001/bigdata/convergent_evolution/data/calls
 cd $BAM
 region=$(head -n $SLURM_ARRAY_TASK_ID $CHR | tail -n 1)
 
-gatk HaplotypeCaller -R $REF -L ${region} --num_threads 4 -I $BAM/16_pool_merge_dup_marked.bam -O $SNP/16_${region}.g.vcf -ERC GVCF
+gatk HaplotypeCaller -R $REF -L ${region} -I $BAM/16_pool_merge_dup_marked.bam -O $SNP/16_${region}.g.vcf -ERC GVCF
 
 16_pool_merge_dup_marked.bam
   -chr 10
@@ -77,7 +77,7 @@ SNP=/rhome/jmarz001/bigdata/convergent_evolution/data/calls
 cd $BAM
 region=$(head -n $SLURM_ARRAY_TASK_ID $CHR | tail -n 1)
 
-gatk HaplotypeCaller -R $REF -L ${region} --num_threads 4 -I $BAM/1L_pool_merge_dup_marked.bam -O $SNP/1L_${region}.g.vcf -ERC GVCF
+gatk HaplotypeCaller -R $REF -L ${region} -I $BAM/1L_pool_merge_dup_marked.bam -O $SNP/1L_${region}.g.vcf -ERC GVCF
 
 1L_pool_merge_dup_marked.bam
   -chr12
@@ -105,7 +105,7 @@ SNP=/rhome/jmarz001/bigdata/convergent_evolution/data/calls
 cd $BAM
 region=$(head -n $SLURM_ARRAY_TASK_ID $CHR | tail -n 1)
 
-gatk HaplotypeCaller -R $REF -L ${region} --num_threads 4 -I $BAM/24_pool_merge_dup_marked.bam -O $SNP/24_${region}.g.vcf -ERC GVCF
+gatk HaplotypeCaller -R $REF -L ${region} -I $BAM/24_pool_merge_dup_marked.bam -O $SNP/24_${region}.g.vcf -ERC GVCF
 
 24_pool_merge_dup_marked.bam
   -chr11
@@ -133,7 +133,7 @@ SNP=/rhome/jmarz001/bigdata/convergent_evolution/data/calls
 cd $BAM
 region=$(head -n $SLURM_ARRAY_TASK_ID $CHR | tail -n 1)
 
-gatk HaplotypeCaller -R $REF -L ${region} --num_threads 4 -I $BAM/250_pool_merge_dup_marked.bam -O $SNP/250_${region}.g.vcf -ERC GVCF
+gatk HaplotypeCaller -R $REF -L ${region} -I $BAM/250_pool_merge_dup_marked.bam -O $SNP/250_${region}.g.vcf -ERC GVCF
 
 250_pool_merge_dup_marked.bam
   -chr13
@@ -161,7 +161,7 @@ SNP=/rhome/jmarz001/bigdata/convergent_evolution/data/calls
 cd $BAM
 region=$(head -n $SLURM_ARRAY_TASK_ID $CHR | tail -n 1)
 
-gatk HaplotypeCaller -R $REF -L ${region} --num_threads 4 -I $BAM/255_pool_merge_dup_marked.bam -O $SNP/255_${region}.g.vcf -ERC GVCF
+gatk HaplotypeCaller -R $REF -L ${region} -I $BAM/255_pool_merge_dup_marked.bam -O $SNP/255_${region}.g.vcf -ERC GVCF
 
 255_pool_merge_dup_marked.bam
   -chr10
@@ -189,7 +189,7 @@ SNP=/rhome/jmarz001/bigdata/convergent_evolution/data/calls
 cd $BAM
 region=$(head -n $SLURM_ARRAY_TASK_ID $CHR | tail -n 1)
 
-gatk HaplotypeCaller -R $REF -L ${region} --num_threads 4 -I $BAM/257_pool_merge_dup_marked.bam -O $SNP/257_${region}.g.vcf -ERC GVCF
+gatk HaplotypeCaller -R $REF -L ${region} -I $BAM/257_pool_merge_dup_marked.bam -O $SNP/257_${region}.g.vcf -ERC GVCF
 
 257_pool_merge_dup_marked.bam
   -chr10
@@ -217,7 +217,7 @@ SNP=/rhome/jmarz001/bigdata/convergent_evolution/data/calls
 cd $BAM
 region=$(head -n $SLURM_ARRAY_TASK_ID $CHR | tail -n 1)
 
-gatk HaplotypeCaller -R $REF -L ${region} --num_threads 4 -I $BAM/258_pool_merge_dup_marked.bam -O $SNP/258_${region}.g.vcf -ERC GVCF
+gatk HaplotypeCaller -R $REF -L ${region} -I $BAM/258_pool_merge_dup_marked.bam -O $SNP/258_${region}.g.vcf -ERC GVCF
 
 258_pool_merge_dup_marked.bam
   -chr6
@@ -245,7 +245,7 @@ SNP=/rhome/jmarz001/bigdata/convergent_evolution/data/calls
 #
 cd $BAM
 region=$(head -n $SLURM_ARRAY_TASK_ID $CHR | tail -n 1)
-gatk HaplotypeCaller -R $REF -L ${region} --num_threads 4 -I $BAM/262_pool_merge_dup_marked.bam -O $SNP/262_${region}.g.vcf -ERC GVCF
+gatk HaplotypeCaller -R $REF -L ${region} -I $BAM/262_pool_merge_dup_marked.bam -O $SNP/262_${region}.g.vcf -ERC GVCF
 
 
 262_pool_merge_dup_marked.bam
@@ -274,7 +274,7 @@ SNP=/rhome/jmarz001/bigdata/convergent_evolution/data/calls
 cd $BAM
 region=$(head -n $SLURM_ARRAY_TASK_ID $CHR | tail -n 1)
 
-gatk HaplotypeCaller -R $REF -L ${region} --num_threads 4 -I $BAM/2L_pool_merge_dup_marked.bam -O $SNP/2L_${region}.g.vcf -ERC GVCF
+gatk HaplotypeCaller -R $REF -L ${region} -I $BAM/2L_pool_merge_dup_marked.bam -O $SNP/2L_${region}.g.vcf -ERC GVCF
 
 2L_pool_merge_dup_marked.bam
   -chr13
