@@ -29,5 +29,5 @@ gatk GenomicsDBImport \
   -V 267_${region}.g.vcf \
   -V 2L_${region}.g.vcf \
   -V 7L_${region}.g.vcf \
-  --genomicsdb-workspace-path all_pops_$region \
-  --intervals $region
+  --genomicsdb-workspace-path $CALLS/all_pops/${region} \
+  --intervals ${region}
