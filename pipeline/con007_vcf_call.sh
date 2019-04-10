@@ -15,13 +15,10 @@ CHR=/rhome/jmarz001/bigdata/convergent_evolution/small_sample/args/chr_intervals
 CALLS=/rhome/jmarz001/bigdata/convergent_evolution/data/calls/all_pops
 region=$(head -n $SLURM_ARRAY_TASK_ID $CHR | tail -n 1)
 
-java -jar $GATK \
-   -T GenotypeGVCFs \
+java -jar $GATK GenotypeGVCFs \
    --max-alternate-alleles 2 \
-   -newQual \
+   --new-qual \
    -L $region \
    -R $REF \
-   -V gendb://$CALLS/${region}/genomicsdb_array \
-   -o ${region}_raw_calls.vcf
-
-# if -newQual doesn't work try --new-qual
+   -V gendb://$CALLS/${region} \
+   --output ${region}_raw_calls.vcf
