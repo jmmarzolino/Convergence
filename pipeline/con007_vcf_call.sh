@@ -12,7 +12,7 @@ GATK=/opt/linux/centos/7.x/x86_64/pkgs/gatk/4.0.12.0/build/libs/gatk-package-4.0
 REF=/rhome/jmarz001/shared/GENOMES/NEW_BARLEY/GENOME_SPLIT/barley_split_reference.fa
 CHR=/rhome/jmarz001/bigdata/convergent_evolution/small_sample/args/chr_intervals.list
 #
-GVCF=/rhome/jmarz001/bigdata/convergent_evolution/data/calls/all_pops
+GVCF=/rhome/jmarz001/bigdata/convergent_evolution/data/gvcf/all_pops
 VCF=/rhome/jmarz001/bigdata/convergent_evolution/data/vcf
 region=$(head -n $SLURM_ARRAY_TASK_ID $CHR | tail -n 1)
 
