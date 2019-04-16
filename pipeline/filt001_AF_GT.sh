@@ -18,6 +18,7 @@ NAME=$(basename "$FILE" | cut -d_ -f1-3)
 # bcftools stats [options] A.vcf.gz [B.vcf.gz]
 bgzip $SNPS/$FILE
 bcftools stats $SNPS/$FILE.gz > $FILTER/$NAME.stats
+
 # extract allele frequency at each position
 #bcftools query -f '%CHROM %POS %AF\n' $FILE -o "$NAME"_AF.vcf
 #grep "^AF" $FILTER/"$NAME"_AF.vcf >> $FILTER/all_AFs
