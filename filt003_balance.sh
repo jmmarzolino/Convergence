@@ -13,14 +13,15 @@ cd $FILT
 # strand bias
 bcftools query -f '%CHROM %POS %SOR\n' conevo.combo.vcf > symmetric_odds_ratio_strand_bias
 bcftools query -f '%CHROM %POS %FS\n' conevo.combo.vcf > fishers_strand_bias
-
-bcftools view -e "SAF / SAR > 100 & SRF / SRR > 100 | SAR / SAF > 100 & SRR / SRF > 100"  -o
+# keep sites with less than a 23 for Fisher test and less than 3.4 for symmetric odds ratio stats
+bcftools view -i "FS<23 && SOR<3.4" conevo.combo.vcf -o conevo.strand_bias_filt.vcf
 ##INFO=<ID=SOR,Number=1,Type=Float,Description="Symmetric Odds Ratio of 2x2 contingency table to detect strand bias">
 ##INFO=<ID=FS,Number=1,Type=Float,Description="Phred-scaled p-value using Fisher's exact test to detect strand bias">
 
 # get the stats for every sample (in sample file) in the vcf file
 REF=/rhome/jmarz001/shared/GENOMES/NEW_BARLEY/GENOME_SPLIT/barley_split_reference.fa
-bcftools stats --fasta-ref $REF --samples-file post_filter_indv_list CCXXIRAD.ref_alt_ratio.vcf > final_stats
+POP=/rhome/jmarz001/bigdata/convergent_evolution/args/populations
+bcftools stats --fasta-ref $REF --samples-file $POP conevo.strand_bias_filt.vcf > conevo_final_stats
 
 ########################################################################################
 # pull out info tags for each site to see what I can filter based on and set informed threshholds
