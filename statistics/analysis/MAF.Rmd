@@ -1,2 +1,38 @@
+#!/usr/bin/env Rscript
 
-conevo_AF <- read.delim2("~/bigdata/convergent_evolution/results/conevo_AF", header=FALSE)
+InFileName = '/rhome/jmarz001/bigdata/convergent_evolution/results/10_AF2'
+#InFileName = '/rhome/jmarz001/bigdata/convergent_evolution/results/16_AF2'
+#InFileName = '/rhome/jmarz001/bigdata/convergent_evolution/results/1L_AF2'
+#InFileName = '/rhome/jmarz001/bigdata/convergent_evolution/results/24_AF2'
+#InFileName = '/rhome/jmarz001/bigdata/convergent_evolution/results/250_AF2'
+#InFileName = '/rhome/jmarz001/bigdata/convergent_evolution/results/255_AF2'
+#InFileName = '/rhome/jmarz001/bigdata/convergent_evolution/results/257_AF2'
+#InFileName = '/rhome/jmarz001/bigdata/convergent_evolution/results/258_AF2'
+#InFileName = '/rhome/jmarz001/bigdata/convergent_evolution/results/262_AF2'
+#InFileName = '/rhome/jmarz001/bigdata/convergent_evolution/results/267_AF2'
+#InFileName = '/rhome/jmarz001/bigdata/convergent_evolution/results/2L_AF2'
+#InFileName = '/rhome/jmarz001/bigdata/convergent_evolution/results/7L_AF2'
+
+library(readr)
+
+X16_AF2 <- read_table2("16_AF2", col_names = FALSE,
+    col_types = cols(`13` = col_integer(),
+        `15` = col_integer(), X3 = col_integer(),
+        X4 = col_integer()))
+
+X16_AF2$FREQ <- X16_AF2$X3/X16_AF2$X4
+
+library(readr)
+X1L_AF2 <- read_table2("1L_AF2", col_names = FALSE,
++     col_types = cols(X3 = col_integer(),
++         X4 = col_integer()))
+
+library(readr)
+X1L_AF2 <- read_table2("1L_AF2", col_names = FALSE,
++     col_types = cols(X3 = col_integer(),
++         X4 = col_integer()))
+
+library(readr)
+X1L_AF2 <- read_table2("1L_AF2", col_names = FALSE,
++     col_types = cols(X3 = col_integer(),
++         X4 = col_integer()))
