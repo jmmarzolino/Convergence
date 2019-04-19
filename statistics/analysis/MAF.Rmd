@@ -1,38 +1,40 @@
 #!/usr/bin/env Rscript
 
-InFileName = '/rhome/jmarz001/bigdata/convergent_evolution/results/10_AF2'
-#InFileName = '/rhome/jmarz001/bigdata/convergent_evolution/results/16_AF2'
-#InFileName = '/rhome/jmarz001/bigdata/convergent_evolution/results/1L_AF2'
-#InFileName = '/rhome/jmarz001/bigdata/convergent_evolution/results/24_AF2'
-#InFileName = '/rhome/jmarz001/bigdata/convergent_evolution/results/250_AF2'
-#InFileName = '/rhome/jmarz001/bigdata/convergent_evolution/results/255_AF2'
-#InFileName = '/rhome/jmarz001/bigdata/convergent_evolution/results/257_AF2'
-#InFileName = '/rhome/jmarz001/bigdata/convergent_evolution/results/258_AF2'
-#InFileName = '/rhome/jmarz001/bigdata/convergent_evolution/results/262_AF2'
-#InFileName = '/rhome/jmarz001/bigdata/convergent_evolution/results/267_AF2'
-#InFileName = '/rhome/jmarz001/bigdata/convergent_evolution/results/2L_AF2'
-#InFileName = '/rhome/jmarz001/bigdata/convergent_evolution/results/7L_AF2'
-
+setwd("/rhome/jmarz001/bigdata/convergent_evolution/results")
 library(readr)
 
-X16_AF2 <- read_table2("16_AF2", col_names = FALSE,
-    col_types = cols(`13` = col_integer(),
-        `15` = col_integer(), X3 = col_integer(),
-        X4 = col_integer()))
+X10_AF2 <- read_table2("10_AF2", col_names = FALSE,col_types = cols(X3 = col_integer(), X4 = col_integer()))
+X10_AF2$FREQ <- X10_AF2$X3/X10_AF2$X4
 
+X16_AF2 <- read_table2("16_AF2", col_names = FALSE, col_types = cols(X3 = col_integer(), X4 = col_integer()))
 X16_AF2$FREQ <- X16_AF2$X3/X16_AF2$X4
 
-library(readr)
-X1L_AF2 <- read_table2("1L_AF2", col_names = FALSE,
-+     col_types = cols(X3 = col_integer(),
-+         X4 = col_integer()))
+X1L_AF2 <- read_table2("1L_AF2", col_names = FALSE, col_types = cols(X3 = col_integer(), X4 = col_integer()))
+X1L_AF2$FREQ <- X1L_AF2$X3/X1L_AF2$X4
 
-library(readr)
-X1L_AF2 <- read_table2("1L_AF2", col_names = FALSE,
-+     col_types = cols(X3 = col_integer(),
-+         X4 = col_integer()))
+X24_AF2 <- read_table2("24_AF2", col_names = FALSE, col_types = cols(X3 = col_integer(), X4 = col_integer()))
+X24_AF2$FREQ <- X24_AF2$X3/X24_AF2$X4
 
-library(readr)
-X1L_AF2 <- read_table2("1L_AF2", col_names = FALSE,
-+     col_types = cols(X3 = col_integer(),
-+         X4 = col_integer()))
+X250_AF2 <- read_table2("250_AF2", col_names = FALSE, col_types = cols(X3 = col_integer(), X4 = col_integer()))
+X250_AF2$FREQ <- X250_AF2$X3/X250_AF2$X4
+
+X255_AF2 <- read_table2("255_AF2", col_names = FALSE, col_types = cols(X3 = col_integer(), X4 = col_integer()))
+X255_AF2$FREQ <- X255_AF2$X3/X255_AF2$X4
+
+X257_AF2 <- read_table2("257_AF2", col_names = FALSE, col_types = cols(X3 = col_integer(), X4 = col_integer()))
+X257_AF2$FREQ <- X257_AF2$X3/X257_AF2$X4
+
+X258_AF2 <- read_table2("258_AF2", col_names = FALSE, col_types = cols(X3 = col_integer(), X4 = col_integer()))
+X258_AF2$FREQ <- X258_AF2$X3/X258_AF2$X4
+
+X262_AF2 <- read_table2("262_AF2", col_names = FALSE, col_types = cols(X3 = col_integer(), X4 = col_integer()))
+X262_AF2$FREQ <- X262_AF2$X3/X262_AF2$X4
+
+X267_AF2 <- read_table2("267_AF2", col_names = FALSE, col_types = cols(X3 = col_integer(), X4 = col_integer()))
+X267_AF2$FREQ <- X267_AF2$X3/X267_AF2$X4
+
+X2L_AF2 <- read_table2("2L_AF2", col_names = FALSE, col_types = cols(X3 = col_integer(), X4 = col_integer()))
+X2L_AF2$FREQ <- X2L_AF2$X3/X2L_AF2$X4
+
+X7L_AF2 <- read_table2("7L_AF2", col_names = FALSE, col_types = cols(X3 = col_integer(), X4 = col_integer()))
+X7L_AF2$FREQ <- X7L_AF2$X3/X7L_AF2$X4
