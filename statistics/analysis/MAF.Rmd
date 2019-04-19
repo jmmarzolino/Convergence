@@ -1,0 +1,2 @@
+
+conevo_AF <- read.delim2("~/bigdata/convergent_evolution/results/conevo_AF", header=FALSE)
