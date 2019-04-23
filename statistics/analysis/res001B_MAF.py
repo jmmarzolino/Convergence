@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 #SBATCH -p short
 #SBATCH --ntasks=1
-#SBATCH --mem=30G
-#SBATCH --time=02:00:00
+#SBATCH --mem=15G
+#SBATCH --time=00:15:00
 #SBATCH --job-name='res001B'
 #SBATCH --output=/rhome/jmarz001/bigdata/convergent_evolution/results/10_AF.stdout
 
@@ -26,12 +26,15 @@ InFile = open(InFileName, 'r')
 for Line in InFile:
     Line = Line.strip('\n') # Split the file into lines
     ElementList = Line.split('\t') # Split the lines into elements
+    ElementList[1] = float(ElementList[1])
+    ElementList[2] = float(ElementList[2])
     #print "ElementList:", ElementList #uncomment for debugging
     # ElementList: ['chr1H_1_279267716 799', '13', '13']
-    CHROM = ElementList[0]
-    FREQ = float(ElementList[1])/float(ElementList[2])
-    FREQ = str(FREQ)
-    OutputString = "%s\t %s" % \
-(CHROM, FREQ)
-    print OutputString+"\n"
+    if ElementList[2] != 0:
+        #print "ElementList:", ElementList[2]
+        CHROM = ElementList[0]
+        FREQ = float(ElementList[1])/float(ElementList[2])
+        FREQ = str(FREQ)
+        OutputString = "%s\t %s" % (CHROM, FREQ)
+        print OutputString+"\n"
 InFile.close()

@@ -4,7 +4,18 @@ setwd("/rhome/jmarz001/bigdata/convergent_evolution/results")
 library(readr)
 
 X10_AF2 <- read_table2("10_AF2", col_names = FALSE,col_types = cols(X3 = col_integer(), X4 = col_integer()))
-X10_AF2$FREQ <- X10_AF2$X3/X10_AF2$X4
+X10_AF2$FREQ_10 <- X10_AF2$X3/X10_AF2$X4
+# remove
+X10_AF2[X10_AF2$FREQ_10 > 0.5, "FREQ_10"] <- 1 - (X10_AF2[X10_AF2$FREQ_10 > 0.5, "FREQ_10"] )
+
+br = seq(0,0.5,by=0.05)
+freq10 = hist(F25_MAF$V1, breaks=br, include.lowest=TRUE, plot=FALSE)
+
+F11_freq_counts = data.frame(range = ranges, frequency = freq11$counts)
+F25_freq_counts = data.frame(range = ranges, frequency = freq25$counts)
+ranges = paste(head(br,-1), br[-1], sep=" - ")
+
+save(FREQ_10, file="/bigdata/koeniglab/jmarz001/convergent_evolution/results/FREQ_10")
 
 X16_AF2 <- read_table2("16_AF2", col_names = FALSE, col_types = cols(X3 = col_integer(), X4 = col_integer()))
 X16_AF2$FREQ <- X16_AF2$X3/X16_AF2$X4
@@ -38,3 +49,12 @@ X2L_AF2$FREQ <- X2L_AF2$X3/X2L_AF2$X4
 
 X7L_AF2 <- read_table2("7L_AF2", col_names = FALSE, col_types = cols(X3 = col_integer(), X4 = col_integer()))
 X7L_AF2$FREQ <- X7L_AF2$X3/X7L_AF2$X4
+
+
+# gather the data tables from each population
+df1 <- data.frame(both_freq_counts$range, both_freq_counts$frequency, F11_freq_counts$frequency, F25_freq_counts$frequency)
+colnames(df1) <- c("range", "both", "F11", "F25")
+df2 <- melt(df1)
+
+# now plot your 12 frequencies on a ggplot bar graph
+ggplot(df2, aes(x=range, y=value, fill=variable)) + geom_bar(stat='identity', position='dodge', width=0.7) + theme_classic() + xlab("Minor Allele Frequency Ranges") + ylab("Proportion") + scale_fill_brewer(palette = "YlOrRd")
