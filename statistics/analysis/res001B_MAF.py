@@ -34,7 +34,11 @@ for Line in InFile:
         #print "ElementList:", ElementList[2]
         CHROM = ElementList[0]
         FREQ = float(ElementList[1])/float(ElementList[2])
+        if FREQ > 0.5:
+            FREQ = 1 - FREQ
         FREQ = str(FREQ)
         OutputString = "%s\t %s" % (CHROM, FREQ)
         print OutputString+"\n"
 InFile.close()
+
+# the data is now formatted and files small enough to make the site freq spectrum graph!
