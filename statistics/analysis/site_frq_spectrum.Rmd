@@ -1,13 +1,18 @@
 #!/usr/bin/env Rscript
+
 # load in all the site frequency files you made/formatted with python
-`10_AF` <- read.delim("/bigdata/koeniglab/jmarz001/convergent_evolution/results/10_AF.stdout", header=FALSE, comment.char="#")
-`16_AF` <- read.delim("/bigdata/koeniglab/jmarz001/convergent_evolution/results/16_AF.stdout", header=FALSE, comment.char="#")
+site_frq_7L <- read.table("/bigdata/koeniglab/jmarz001/convergent_evolution/results/site_frq_7L", quote="\"", comment.char="")
+
 # define other necessary vars, the breaks and ranges
-br = seq(0,0.5,by=0.05)
+br = seq(0,1, by=0.05)
 ranges = paste(head(br,-1), br[-1], sep=" - ")
+
 # group data by ranges (one line example, do for all pops)
-freq10 = hist(`10_AF`$V2, breaks=br, include.lowest=TRUE, plot=FALSE)
+freq10 = hist(site_frq_10, breaks=br, include.lowest=TRUE, plot=FALSE)
 freq10_counts = data.frame(range = ranges, frequency = freq10$counts)
+
+
+
 # the number of sites needs to be normalized so make the sites a proportion
 freq10_counts$frequency <- freq10_counts$frequency/sum(freq10_counts$frequency)
 
