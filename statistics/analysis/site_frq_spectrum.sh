@@ -16,4 +16,4 @@ grep -c 'na' $FILE > missing_sites_${POP}
 # remove 'na' lines
 sed -i -e 's/na//g' $FILE > ${FILE}_nona
 # remove blank spaces leftover from sed
-grep '[^[:blank:]]' ${FILE}_nona > ${FILE}_floats
+grep '[^[:blank:]]' $FILE > ${FILE}_floats
