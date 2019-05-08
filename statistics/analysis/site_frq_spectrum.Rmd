@@ -1,49 +1,65 @@
 #!/usr/bin/env Rscript
 
-# load in all the site frequency files you made/formatted with python
-site_frq_7L <- read.table("/bigdata/koeniglab/jmarz001/convergent_evolution/results/site_frq_7L", quote="\"", comment.char="")
+# construct population site frequency lists from bins you made/formatted with python
+pop_10_bins = c(...)
+
+# combine all population bins into a data frame
+population_site_frequencies <- data.frame(pop_10_bins, pop_16_bins, pop_1L_bins, pop_24_bins, pop_250_bins, pop_255_bins, pop_257_bins, pop_258_bins, pop_262_bins, pop_267_bins, pop_2L_bins, pop_7L_bins)
 
 # define other necessary vars, the breaks and ranges
-br = seq(0,1, by=0.05)
-ranges = paste(head(br,-1), br[-1], sep=" - ")
+bins = c("0.01-0.05", "0.05-0.1", '0.1-0.15', '0.15-0.2', '0.2-0.25', '0.25-0.3', '0.3-0.35', '0.35-0.4', '0.4-0.45', '0.45-0.5', '0.5-0.55', '0.55-0.6', '0.6-0.65', '0.65-0.7', '0.7-0.75', '0.75-0.8', '0.8-0.85', '0.85-0.9', '0.9-0.95', '0.95-1', 'unknown', '0', 'na')
 
-# group data by ranges (one line example, do for all pops)
-freq10 = hist(site_frq_10, breaks=br, include.lowest=TRUE, plot=FALSE)
-freq10_counts = data.frame(range = ranges, frequency = freq10$counts)
-
-
+# add bins to data frame
+population_site_frequencies[,13] <- cbind(bins)
 
 # the number of sites needs to be normalized so make the sites a proportion
-freq10_counts$frequency <- freq10_counts$frequency/sum(freq10_counts$frequency)
+# divide each population column by the number of counted sites (non-na)
+df1$pop_7L_bins <- population_site_frequencies$pop_7L_bins/(65381964 - population_site_frequencies$pop_7L_bins[23] - population_site_frequencies$pop_7L_bins[21])
+df1$ranges <- population_site_frequencies$V13
 
-# gather the data tables from each population
-df1 <- data.frame(freq10_counts$range, freq10_counts$frequency, freq16_counts$frequency, freq1L_counts$frequency, freq24_counts$frequency, freq250_counts$frequency, freq255_counts$frequency, freq257_counts$frequency, freq258_counts$frequency, freq262_counts$frequency, freq267_counts$frequency, freq2L_counts$frequency, freq7L_counts$frequency)
-
-colnames(df1) <- c("range", "pop10", "pop16", "pop1L", "pop24", "pop250", "pop255", "pop257", "pop258", "pop262", "pop267", "pop2L", "pop7L")
+# make df graphable
 df2 <- melt(df1)
-
-# now plot your 12 frequencies on a ggplot bar graph
-ggplot(df2, aes(x=range, y=value, fill=variable)) + geom_bar(stat='identity', position='dodge', width=0.7) + theme_classic() + xlab("Frequency Range") + ylab("Number of Sites")
+# plot your 12 frequencies
+ggplot(df2, aes(x=ranges, y=value, fill=variable)) + geom_bar(stat='identity', position='dodge', width=0.7) + theme_classic() + xlab("Frequency Ranges") + ylab("Proportion of Sites")
 
 
 # plot by CC
 # CCV
-> CCV <- data.frame(freq10_counts$range, freq10_counts$frequency, freq16_counts$frequency, freq257_counts$frequency, freq258_counts$frequency, freq262_counts$frequency)
-> colnames(CCV) <- c("range", "F25D", "F42D", "F6D", "F6B", "F25B")
-> df3 <- melt(CCV)
-Using range as id variables
-> ggplot(df3, aes(x=range, y=value, fill=variable)) + geom_bar(stat='identity', position='dodge', width=0.7) + theme_classic() + xlab("Frequency Range") + ylab("Proportion of Sites")
+# UCRKL: 10, 16, 257, 258, 262
+CCV <- data.frame(df1.1$ranges, df1.1$pop_10_bins, df1.1$pop_16_bins, df1.1$pop_257_bins, df1.1$pop_258_bins, df1.1$pop_262_bins)
+colnames(CCV) <- c("range", "F25D", "F42D", "F6D", "F6B", "F25B")
+df.CCV <- melt(CCV)
+
+ggplot(df.CCV, aes(x=range, y=value, fill=variable)) + geom_bar(stat='identity', position='dodge', width=0.7) + theme_classic() + xlab("Frequency Range") + ylab("Proportion of Sites")
 
 # CCII
-> CCII <- data.frame(freq10_counts$range, freq1L_counts$frequency, freq2L_counts$frequency, freq7L_counts$frequency, freq250_counts$frequency, freq255_counts$frequency)
-> colnames(CCII) <- c("range", "F18D", "F28D", "F58D", "F27B", "F50B")
-> df4 <- melt(CCII)
-Using range as id variables
-> ggplot(df4, aes(x=range, y=value, fill=variable)) + geom_bar(stat='identity', position='dodge', width=0.7) + theme_classic() + xlab("Frequency Range") + ylab("Proportion of Sites")
+# UCRKL: 1, 2, 7, 250, 255
+CCII <- data.frame(df1.1$ranges, df1.1$pop_1L_bins, df1.1$pop_2L_bins, df1.1$pop_7L_bins, df1.1$pop_250_bins, df1.1$pop_255_bins)
+colnames(CCII) <- c("range", "F18D", "F28D", "F58D", "F27B", "F50B")
+df.CCII <- melt(CCII)
 
-# CCXXI
-> CCXXI <- data.frame(freq10_counts$range, freq267_counts$frequency, freq24_counts$frequency)
-> colnames(CCXXI) <- c("range", "F11", "F25")
-> df5 <- melt(CCXXI)
-Using range as id variables
-> ggplot(df5, aes(x=range, y=value, fill=variable)) + geom_bar(stat='identity', position='dodge', width=0.7) + theme_classic() + xlab("Frequency Range") + ylab("Proportion of Sites")
+ggplot(df.CCII, aes(x=range, y=value, fill=variable)) + geom_bar(stat='identity', position='dodge', width=0.7) + theme_classic() + xlab("Frequency Range") + ylab("Proportion of Sites")
+
+# CCXXI: 267, 24
+CCXXI <- data.frame(freq10_counts$range, freq267_counts$frequency, freq24_counts$frequency)
+colnames(CCXXI) <- c("range", "F11", "F25")
+df.CCXXI <- melt(CCXXI)
+
+ggplot(df5, aes(x=range, y=value, fill=variable)) + geom_bar(stat='identity', position='dodge', width=0.7) + theme_classic() + xlab("Frequency Range") + ylab("Proportion of Sites")
+
+
+# original graph
+p <- ggplot(df2, aes(x=range, y=value, fill=variable)) + geom_bar(stat='identity', position='dodge', width=0.7) + theme_classic() + xlab("Minor Allele Frequency Ranges") + ylab("Frequency") + scale_fill_brewer(palette = "YlOrRd")
+
+# neutral selection function: 2Neu/i
+# Ne=population size, u = mutation rate, i=sites
+# mutation rate (empirically calculated) = 7e-9
+# barley nucleotide diversity estimate ~ 0.005 (Morrell 2003)
+# effective population size = theta/4u = 0.005/4*7e-09 = 178571.4
+
+# the finally add 1500 to the whole thing to just get the line above the minimum value of the MAFs so you can see where the line fits over the data
+funct <- function(x) ((178571.4*2*7e-09)/(x)) + 1500
+p + stat_function(fun = funct)
+
+# also drew a y-intercept at 1500 so I could see it's about the lowest point on the graph and what a straight line over the data looks like
+p + stat_function(fun = funct) + geom_hline(yintercept=1500)

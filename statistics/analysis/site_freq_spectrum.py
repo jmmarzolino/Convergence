@@ -10,7 +10,7 @@ PopList = ['10', '16', '1L', '24', '250', '255', '257', '258', '262', '267', '2L
 bins = [0.0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 1.1]
 lines = 65381964
 for Pop in PopList:
-    InFileName = '/rhome/jmarz001/bigdata/convergent_evolution/results/'+ 'site_frq_' + Pop
+    InFileName = '/rhome/jmarz001/bigdata/convergent_evolution/results/'+ 'site_frq_' + Pop + '_floats'
     InFile = open(InFileName, 'r')
     OutFileName = '/rhome/jmarz001/bigdata/convergent_evolution/results/' + Pop + '_bins'
     OutFile = open(OutFileName, 'w+')
