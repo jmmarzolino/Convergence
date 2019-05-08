@@ -23,6 +23,16 @@ df2 <- melt(df1)
 ggplot(df2, aes(x=ranges, y=value, fill=variable)) + geom_bar(stat='identity', position='dodge', width=0.7) + theme_classic() + xlab("Frequency Ranges") + ylab("Proportion of Sites")
 
 
+
+# neutral selection function: 2Neu/i
+# Ne=population size, u = mutation rate, i=sites
+# mutation rate (empirically calculated) = 7e-9
+# barley nucleotide diversity estimate ~ 0.005 (Morrell 2003)
+# effective population size = theta/4u = 0.005/4*7e-09 = 178571.4
+funct <- function(x) ((178571.4*2*7e-09 * 65381964) / (3000000 * x))
+
+# custom colors
+custom.5col <- c("#C4961A", "#D16103", "#C3D7A4", "#52854C", "#00AFBB")
 # plot by CC
 # CCV
 # UCRKL: 10, 16, 257, 258, 262
@@ -30,7 +40,8 @@ CCV <- data.frame(df1.1$ranges, df1.1$pop_10_bins, df1.1$pop_16_bins, df1.1$pop_
 colnames(CCV) <- c("range", "F25D", "F42D", "F6D", "F6B", "F25B")
 df.CCV <- melt(CCV)
 
-ggplot(df.CCV, aes(x=range, y=value, fill=variable)) + geom_bar(stat='identity', position='dodge', width=0.7) + theme_classic() + xlab("Frequency Range") + ylab("Proportion of Sites")
+CCV_plot <- ggplot(df.CCV, aes(x=range, y=value, fill=variable)) + geom_bar(stat='identity', position='dodge', width=0.7) + theme_classic() + xlab("Frequency Ranges") + ylab("Proportion of Sites")
+CCV_plot + scale_fill_manual(values = custom.5col) + stat_function(fun = funct)
 
 # CCII
 # UCRKL: 1, 2, 7, 250, 255
@@ -38,28 +49,15 @@ CCII <- data.frame(df1.1$ranges, df1.1$pop_1L_bins, df1.1$pop_2L_bins, df1.1$pop
 colnames(CCII) <- c("range", "F18D", "F28D", "F58D", "F27B", "F50B")
 df.CCII <- melt(CCII)
 
-ggplot(df.CCII, aes(x=range, y=value, fill=variable)) + geom_bar(stat='identity', position='dodge', width=0.7) + theme_classic() + xlab("Frequency Range") + ylab("Proportion of Sites")
+CCII_plot <- ggplot(df.CCII, aes(x=range, y=value, fill=variable)) + geom_bar(stat='identity', position='dodge', width=0.7) + theme_classic() + xlab("Frequency Ranges") + ylab("Proportion of Sites")
+CCII_plot + scale_fill_manual(values = custom.5col) + stat_function(fun = funct)
 
+# fewer custom colors
+custom.2col <- c("#00AFBB", "#E7B800")
 # CCXXI: 267, 24
-CCXXI <- data.frame(freq10_counts$range, freq267_counts$frequency, freq24_counts$frequency)
+CCXXI <- data.frame(df1.1$ranges, df1.1$pop_267_bins, df1.1$pop_24_bins)
 colnames(CCXXI) <- c("range", "F11", "F25")
 df.CCXXI <- melt(CCXXI)
 
-ggplot(df5, aes(x=range, y=value, fill=variable)) + geom_bar(stat='identity', position='dodge', width=0.7) + theme_classic() + xlab("Frequency Range") + ylab("Proportion of Sites")
-
-
-# original graph
-p <- ggplot(df2, aes(x=range, y=value, fill=variable)) + geom_bar(stat='identity', position='dodge', width=0.7) + theme_classic() + xlab("Minor Allele Frequency Ranges") + ylab("Frequency") + scale_fill_brewer(palette = "YlOrRd")
-
-# neutral selection function: 2Neu/i
-# Ne=population size, u = mutation rate, i=sites
-# mutation rate (empirically calculated) = 7e-9
-# barley nucleotide diversity estimate ~ 0.005 (Morrell 2003)
-# effective population size = theta/4u = 0.005/4*7e-09 = 178571.4
-
-# the finally add 1500 to the whole thing to just get the line above the minimum value of the MAFs so you can see where the line fits over the data
-funct <- function(x) ((178571.4*2*7e-09)/(x)) + 1500
-p + stat_function(fun = funct)
-
-# also drew a y-intercept at 1500 so I could see it's about the lowest point on the graph and what a straight line over the data looks like
-p + stat_function(fun = funct) + geom_hline(yintercept=1500)
+CCXXI_plot <- ggplot(df.CCXXI, aes(x=range, y=value, fill=variable)) + geom_bar(stat='identity', position='dodge', width=0.7) + theme_classic() + xlab("Frequency Ranges") + ylab("Proportion of Sites")
+CCXXI_plot + scale_fill_manual(values = custom.5col) + stat_function(fun = funct)
