@@ -1,20 +1,20 @@
 #!/usr/bin/env Rscript
 
 # construct population site frequency lists from bins you made/formatted with python
-pop_10_bins = c(...)
+pop10 = c(...)
 
 # combine all population bins into a data frame
-population_site_frequencies <- data.frame(pop_10_bins, pop_16_bins, pop_1L_bins, pop_24_bins, pop_250_bins, pop_255_bins, pop_257_bins, pop_258_bins, pop_262_bins, pop_267_bins, pop_2L_bins, pop_7L_bins)
+population_site_frequencies <- data.frame(pop10, pop16, pop1, pop24, pop250, pop255, pop257, pop258, pop262, pop267, pop2, pop7)
 
 # define other necessary vars, the breaks and ranges
-bins = c("0.01-0.05", "0.05-0.1", '0.1-0.15', '0.15-0.2', '0.2-0.25', '0.25-0.3', '0.3-0.35', '0.35-0.4', '0.4-0.45', '0.45-0.5', '0.5-0.55', '0.55-0.6', '0.6-0.65', '0.65-0.7', '0.7-0.75', '0.75-0.8', '0.8-0.85', '0.85-0.9', '0.9-0.95', '0.95-1', 'unknown', '0', 'na')
+bins = c("0.01-0.05", "0.05-0.1", '0.1-0.15', '0.15-0.2', '0.2-0.25', '0.25-0.3', '0.3-0.35', '0.35-0.4', '0.4-0.45', '0.45-0.5', '0.5-0.55', '0.55-0.6', '0.6-0.65', '0.65-0.7', '0.7-0.75', '0.75-0.8', '0.8-0.85', '0.85-0.9', '0.9-0.95', '0.95-1', 'unknown', '0')
 
 # add bins to data frame
 population_site_frequencies[,13] <- cbind(bins)
 
 # the number of sites needs to be normalized so make the sites a proportion
 # divide each population column by the number of counted sites (non-na)
-df1$pop_7L_bins <- population_site_frequencies$pop_7L_bins/(65381964 - population_site_frequencies$pop_7L_bins[23] - population_site_frequencies$pop_7L_bins[21])
+df1 <- population_site_frequencies/65381964
 df1$ranges <- population_site_frequencies$V13
 
 # make df graphable
@@ -36,7 +36,7 @@ custom.5col <- c("#C4961A", "#D16103", "#C3D7A4", "#52854C", "#00AFBB")
 # plot by CC
 # CCV
 # UCRKL: 10, 16, 257, 258, 262
-CCV <- data.frame(df1.1$ranges, df1.1$pop_10_bins, df1.1$pop_16_bins, df1.1$pop_257_bins, df1.1$pop_258_bins, df1.1$pop_262_bins)
+CCV <- data.frame(df1.1$ranges, df1.1$pop10, df1.1$pop16, df1.1$pop257, df1.1$pop258, df1.1$pop262)
 colnames(CCV) <- c("range", "F25D", "F42D", "F6D", "F6B", "F25B")
 df.CCV <- melt(CCV)
 
@@ -45,7 +45,7 @@ CCV_plot + scale_fill_manual(values = custom.5col) + stat_function(fun = funct)
 
 # CCII
 # UCRKL: 1, 2, 7, 250, 255
-CCII <- data.frame(df1.1$ranges, df1.1$pop_1L_bins, df1.1$pop_2L_bins, df1.1$pop_7L_bins, df1.1$pop_250_bins, df1.1$pop_255_bins)
+CCII <- data.frame(df1.1$ranges, df1.1$pop1, df1.1$pop2, df1.1$pop7, df1.1$pop250, df1.1$pop255)
 colnames(CCII) <- c("range", "F18D", "F28D", "F58D", "F27B", "F50B")
 df.CCII <- melt(CCII)
 
@@ -55,7 +55,7 @@ CCII_plot + scale_fill_manual(values = custom.5col) + stat_function(fun = funct)
 # fewer custom colors
 custom.2col <- c("#00AFBB", "#E7B800")
 # CCXXI: 267, 24
-CCXXI <- data.frame(df1.1$ranges, df1.1$pop_267_bins, df1.1$pop_24_bins)
+CCXXI <- data.frame(df1.1$ranges, df1.1$pop267, df1.1$pop24_bins)
 colnames(CCXXI) <- c("range", "F11", "F25")
 df.CCXXI <- melt(CCXXI)
 
