@@ -1,0 +1,113 @@
+#!/usr/bin/env Rscript
+#SBATCH -p koeniglab
+#SBATCH --ntasks=1
+#SBATCH --mem=40G
+#SBATCH --time=02:00:00
+#SBATCH --job-name='SFS'
+#SBATCH --output=SFS.stdout
+
+# set up the environment
+library(ggplot2)
+library(reshape2)
+library(readr)
+
+# load in the table
+VariantBins <- read_delim("VariantBins",  "\t", escape_double = FALSE, col_names = FALSE, trim_ws = TRUE)
+# add column names
+colnames(VariantBins) <- c("site", "10", "16", "1", "24", "250", "255", "257", "258", "262", "267", "2", "7", "average")
+
+# define other necessary vars, the breaks and ranges
+br = seq(0,1,by=0.05)
+ranges = paste(head(br,-1), br[-1], sep=" - ")
+
+# group data by ranges
+freq10 = hist(VariantBins$`10`, breaks=br, include.lowest=TRUE, plot=FALSE)
+freq10_counts = data.frame(range = ranges, frequency = freq10$counts)
+# the number of sites needs to be normalized so make the sites a proportion
+freq10_counts$frequency <- freq10_counts$frequency/sum(freq10_counts$frequency)
+
+# now do that for every population
+freq16 = hist(VariantBins$`16`, breaks=br, include.lowest=TRUE, plot=FALSE)
+freq16_counts = data.frame(range = ranges, frequency = freq16$counts)
+freq16_counts$frequency <- freq16_counts$frequency/sum(freq16_counts$frequency)
+freq1 = hist(VariantBins$`1`, breaks=br, include.lowest=TRUE, plot=FALSE)
+freq1_counts = data.frame(range = ranges, frequency = freq1$counts)
+freq1_counts$frequency <- freq1_counts$frequency/sum(freq1_counts$frequency)
+freq24 = hist(VariantBins$`24`, breaks=br, include.lowest=TRUE, plot=FALSE)
+freq24_counts = data.frame(range = ranges, frequency = freq24$counts)
+freq24_counts$frequency <- freq24_counts$frequency/sum(freq24_counts$frequency)
+freq250 = hist(VariantBins$`250`, breaks=br, include.lowest=TRUE, plot=FALSE)
+freq250_counts = data.frame(range = ranges, frequency = freq250$counts)
+freq250_counts$frequency <- freq250_counts$frequency/sum(freq250_counts$frequency)
+freq255 = hist(VariantBins$`255`, breaks=br, include.lowest=TRUE, plot=FALSE)
+freq255_counts = data.frame(range = ranges, frequency = freq255$counts)
+freq255_counts$frequency <- freq255_counts$frequency/sum(freq255_counts$frequency)
+freq257 = hist(VariantBins$`257`, breaks=br, include.lowest=TRUE, plot=FALSE)
+freq257_counts = data.frame(range = ranges, frequency = freq257$counts)
+freq257_counts$frequency <- freq257_counts$frequency/sum(freq257_counts$frequency)
+freq258 = hist(VariantBins$`258`, breaks=br, include.lowest=TRUE, plot=FALSE)
+freq258_counts = data.frame(range = ranges, frequency = freq258$counts)
+freq258_counts$frequency <- freq258_counts$frequency/sum(freq258_counts$frequency)
+freq262 = hist(VariantBins$`262`, breaks=br, include.lowest=TRUE, plot=FALSE)
+freq262_counts = data.frame(range = ranges, frequency = freq262$counts)
+freq262_counts$frequency <- freq262_counts$frequency/sum(freq262_counts$frequency)
+freq267 = hist(VariantBins$`267`, breaks=br, include.lowest=TRUE, plot=FALSE)
+freq267_counts = data.frame(range = ranges, frequency = freq267$counts)
+freq267_counts$frequency <- freq267_counts$frequency/sum(freq267_counts$frequency)
+freq2 = hist(VariantBins$`2`, breaks=br, include.lowest=TRUE, plot=FALSE)
+freq2_counts = data.frame(range = ranges, frequency = freq2$counts)
+freq2_counts$frequency <- freq2_counts$frequency/sum(freq2_counts$frequency)
+freq7 = hist(VariantBins$`7`, breaks=br, include.lowest=TRUE, plot=FALSE)
+freq7_counts = data.frame(range = ranges, frequency = freq7$counts)
+freq7_counts$frequency <- freq7_counts$frequency/sum(freq7_counts$frequency)
+
+# gather the data tables from each population
+df1 <- data.frame(freq10_counts$range, freq10_counts$frequency, freq16_counts$frequency, freq1_counts$frequency, freq24_counts$frequency, freq250_counts$frequency, freq255_counts$frequency, freq257_counts$frequency, freq258_counts$frequency, freq262_counts$frequency, freq267_counts$frequency, freq2_counts$frequency, freq7_counts$frequency)
+
+colnames(df1) <- c("range", "pop10", "pop16", "pop1", "pop24", "pop250", "pop255", "pop257", "pop258", "pop262", "pop267", "pop2", "pop7")
+df2 <- melt(df1)
+write.table(df2, file="df2", sep="\t", row.names=F, col.names = T)
+
+
+
+# now plot your 12 frequencies on a ggplot bar graph
+ggplot(df2, aes(x=range, y=value, fill=variable)) + geom_bar(stat='identity', position='dodge', width=0.7) + theme_classic() + xlab("Frequency Range") + ylab("Number of Sites")
+
+
+# neutral selection function: 2Neu/i
+# Ne=population size, u = mutation rate, i=sites
+# mutation rate (empirically calculated) = 7e-9
+# barley nucleotide diversity estimate ~ 0.005 (Morrell 2003)
+# effective population size = theta/4u = 0.005/4*7e-09 = 178571.4
+funct <- function(x) ((178571.4*2*7e-09 * 65381964) / (3000000 * x))
+
+# custom colors
+custom.5col <- c("#C4961A", "#D16103", "#C3D7A4", "#52854C", "#00AFBB")
+# plot by CC
+# CCV
+# UCRKL: 10, 16, 257, 258, 262
+CCV <- data.frame(df1.1$ranges, df1.1$pop10, df1.1$pop16, df1.1$pop257, df1.1$pop258, df1.1$pop262)
+colnames(CCV) <- c("range", "F25D", "F42D", "F6D", "F6B", "F25B")
+df.CCV <- melt(CCV)
+
+CCV_plot <- ggplot(df.CCV, aes(x=range, y=value, fill=variable)) + geom_bar(stat='identity', position='dodge', width=0.7) + theme_classic() + xlab("Frequency Ranges") + ylab("Proportion of Sites")
+CCV_plot + scale_fill_manual(values = custom.5col) + stat_function(fun = funct)
+
+# CCII
+# UCRKL: 1, 2, 7, 250, 255
+CCII <- data.frame(df1.1$ranges, df1.1$pop1, df1.1$pop2, df1.1$pop7, df1.1$pop250, df1.1$pop255)
+colnames(CCII) <- c("range", "F18D", "F28D", "F58D", "F27B", "F50B")
+df.CCII <- melt(CCII)
+
+CCII_plot <- ggplot(df.CCII, aes(x=range, y=value, fill=variable)) + geom_bar(stat='identity', position='dodge', width=0.7) + theme_classic() + xlab("Frequency Ranges") + ylab("Proportion of Sites")
+CCII_plot + scale_fill_manual(values = custom.5col) + stat_function(fun = funct)
+
+# fewer custom colors
+custom.2col <- c("#00AFBB", "#E7B800")
+# CCXXI: 267, 24
+CCXXI <- data.frame(df1.1$ranges, df1.1$pop267, df1.1$pop24_bins)
+colnames(CCXXI) <- c("range", "F11", "F25")
+df.CCXXI <- melt(CCXXI)
+
+CCXXI_plot <- ggplot(df.CCXXI, aes(x=range, y=value, fill=variable)) + geom_bar(stat='identity', position='dodge', width=0.7) + theme_classic() + xlab("Frequency Ranges") + ylab("Proportion of Sites")
+CCXXI_plot + scale_fill_manual(values = custom.5col) + stat_function(fun = funct)
