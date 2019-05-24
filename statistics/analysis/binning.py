@@ -3,12 +3,12 @@
 #SBATCH --ntasks=1
 #SBATCH --mem=30G
 #SBATCH --time=12:00:00
-#SBATCH --job-name='site_freq'
-#SBATCH --output=site_freq_spectrum.stdout
+#SBATCH --job-name='binning'
+#SBATCH --output=binning.stdout
 
 PopList = ['10', '16', '1L', '24', '250', '255', '257', '258', '262', '267', '2L', '7L']
 bins = [0.0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 1.0]
-lines = 65381964
+lines =
 for Pop in PopList:
     InFileName = '/rhome/jmarz001/bigdata/convergent_evolution/results/'+ 'site_frq_' + Pop + '_floats'
     InFile = open(InFileName, 'r')
@@ -86,8 +86,8 @@ for Pop in PopList:
         else:
             u = u + 1
     # when the bins are done, divide by lines
-    hist = [a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, zero]
-    hist = str(hist)
+    hist=(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, zero)
+    str(hist)
     OutputString = "%s\n" % (hist)
     OutFile.write(OutputString)
     InFile.close()
