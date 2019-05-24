@@ -1,0 +1,10 @@
+# R
+setwd('/rhome/jmarz001/bigdata/convergent_evolution/results/')
+library(readr)
+pop_freqs <- read_delim("pop_freqs", "\t", escape_double = FALSE, col_names = FALSE, trim_ws = TRUE)
+
+pop_freqs$avg <- rowMeans(pop_freqs)
+
+pop_freqs2 <- pop_freqs[which(pop_freqs$avg != 1),]
+
+write.table(pop_freqs2, file="pop_freqs_avg" sep="\t", col.names=F, row.names=F)
