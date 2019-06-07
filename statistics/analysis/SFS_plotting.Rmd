@@ -1,0 +1,49 @@
+#!/usr/bin/env Rscript
+#SBATCH -p koeniglab
+#SBATCH --ntasks=1
+#SBATCH --mem=40G
+#SBATCH --time=02:00:00
+#SBATCH --job-name='SFS_plot'
+#SBATCH --output=SFS_plot.stdout
+
+# set up the environment
+library(ggplot2)
+library(reshape2)
+library(readr)
+CCII_D_melt <- read_delim("CCII_D_melt",  "\t", escape_double = FALSE, col_names = T, trim_ws = TRUE)
+CCII_B_melt <- read_delim("CCII_B_melt",  "\t", escape_double = FALSE, col_names = T, trim_ws = TRUE)
+CCV_D_melt <- read_delim("CCV_B_D_melt",  "\t", escape_double = FALSE, col_names = T, trim_ws = TRUE)
+CCV_B_melt <- read_delim("CCV_B_melt",  "\t", escape_double = FALSE, col_names = T, trim_ws = TRUE)
+CCXXI_melt <- read_delim("CCXXI_melt",  "\t", escape_double = FALSE, col_names = T, trim_ws = TRUE)
+
+#PLOTTING
+
+# neutral selection function: 2Neu/i
+# Ne=population size, u = mutation rate, i=sites
+# mutation rate (empirically calculated) = 7e-9
+# barley nucleotide diversity estimate ~ 0.005 (Morrell 2003)
+# effective population size = theta/4u = 0.005/4*7e-09 = 178571.4
+funct <- function(x) ((178571.4*2*7e-09 * 65381964) / (3000000 * x))
+
+# custom colors
+custom.2col <- c("#8093F1", "#72DDF7")
+custom.3col <- c("#B388EB", "#8093F1", "#72DDF7")
+
+# now plot your 12 frequencies on a ggplot bar graph
+ggplot(CCII_D_melt, aes(x=range, y=value, fill=variable)) + geom_bar(stat='identity', position='dodge', width=0.7) + theme_classic() + xlab("Frequency Range") + ylab("Proportion of Sites") + ggtitle("CCII Davis") + scale_fill_manual(values = custom.3col) + stat_function(fun = funct)
+
+ggplot(CCII_B_melt, aes(x=range, y=value, fill=variable)) + geom_bar(stat='identity', position='dodge', width=0.7) + theme_classic() + xlab("Frequency Range") + ylab("Proportion of Sites") + ggtitle("CCII Bozeman") + scale_fill_manual(values = custom.2col) + stat_function(fun = funct)
+
+
+# issue with ggplotting order of generations
+# fix with the following
+# sets the factor order as the order the variables are in in the tables
+library(forcats)
+CCV_D_melt$variable = fct_inorder(CCV_D_melt$variable)
+# then continue plotting
+ggplot(CCV_D_melt, aes(x=range, y=value, fill=variable)) + geom_bar(stat='identity', position='dodge', width=0.7) + theme_classic() + xlab("Frequency Range") + ylab("Proportion of Sites") + ggtitle("CCV Davis") + scale_fill_manual(values = custom.3col) + stat_function(fun = funct)
+# fix factor order
+CCV_B_melt$variable = fct_inorder(CCV_B_melt$variable)
+ggplot(CCV_B_melt, aes(x=range, y=value, fill=variable)) + geom_bar(stat='identity', position='dodge', width=0.7) + theme_classic() + xlab("Frequency Range") + ylab("Proportion of Sites") + ggtitle("CCV Bozeman") + scale_fill_manual(values = custom.2col) + stat_function(fun = funct)
+
+ggplot(CCXXI_melt, aes(x=range, y=value, fill=variable)) + geom_bar(stat='identity', position='dodge', width=0.7) + theme_classic() + xlab("Frequency Range") + ylab("Proportion of Sites") + ggtitle("CCXXI") + scale_fill_manual(values = custom.2col) + stat_function(fun = funct)

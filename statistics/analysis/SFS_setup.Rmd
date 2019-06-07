@@ -1,0 +1,120 @@
+#!/usr/bin/env Rscript
+#SBATCH -p koeniglab
+#SBATCH --ntasks=1
+#SBATCH --mem=40G
+#SBATCH --time=02:00:00
+#SBATCH --job-name='SFS_setup'
+#SBATCH --output=SFS_setup.stdout
+
+# set up the environment
+library(ggplot2)
+library(reshape2)
+library(readr)
+# define other necessary vars, the breaks and ranges
+br = seq(0,1,by=0.05)
+ranges = paste(head(br,-1), br[-1], sep=" - ")
+
+
+# load in CC II table
+CCII_Frequencies2 <- read_delim("CCII_Frequencies2",  "\t", escape_double = FALSE, col_names = FALSE, trim_ws = TRUE)
+# calculate and add mean site frequency across samples
+CCII_Frequencies2$avg <- rowMeans(CCII_Frequencies2[,2:6])
+# add column names
+colnames(CCII_Frequencies2) <- c("site", "1", "2", "7", "250", "255", "average")
+# remove invariant sites (keep sites where the average isn't 0)
+CCII_Frequencies3 <- CCII_Frequencies2[which(CCII_Frequencies2$average != 0),]
+write.table(CCII_Frequencies3, file="CCII_Frequencies3", sep="\t", row.names=F, col.names = F)
+# group data by ranges and normalize number of sites needs to be normalized by population into a proportion
+freq1 = hist(CCII_Frequencies3$`1`, breaks=br, include.lowest=TRUE, plot=FALSE)
+freq1_counts = data.frame(range = ranges, frequency = freq1$counts)
+freq1_counts$frequency <- freq1_counts$frequency/sum(freq1_counts$frequency)
+freq2 = hist(CCII_Frequencies3$`2`, breaks=br, include.lowest=TRUE, plot=FALSE)
+freq2_counts = data.frame(range = ranges, frequency = freq2$counts)
+freq2_counts$frequency <- freq2_counts$frequency/sum(freq2_counts$frequency)
+freq7 = hist(CCII_Frequencies3$`7`, breaks=br, include.lowest=TRUE, plot=FALSE)
+freq7_counts = data.frame(range = ranges, frequency = freq7$counts)
+freq7_counts$frequency <- freq7_counts$frequency/sum(freq7_counts$frequency)
+freq250 = hist(CCII_Frequencies3$`250`, breaks=br, include.lowest=TRUE, plot=FALSE)
+freq250_counts = data.frame(range = ranges, frequency = freq250$counts)
+freq250_counts$frequency <- freq250_counts$frequency/sum(freq250_counts$frequency)
+freq255 = hist(CCII_Frequencies3$`255`, breaks=br, include.lowest=TRUE, plot=FALSE)
+freq255_counts = data.frame(range = ranges, frequency = freq255$counts)
+freq255_counts$frequency <- freq255_counts$frequency/sum(freq255_counts$frequency)
+
+# load in CC V table
+CCV_Frequencies2 <- read_delim("CCV_Frequencies2",  "\t", escape_double = FALSE, col_names = FALSE, trim_ws = TRUE)
+# calculate and add mean site frequency across samples
+CCV_Frequencies2$avg <- rowMeans(CCV_Frequencies2[,2:6])
+# add column names
+colnames(CCV_Frequencies2) <- c("site", "257", "10", "16", "258", "262", "average")
+# remove invariant sites (keep sites where the average isn't 0)
+CCV_Frequencies3 <- CCV_Frequencies2[which(CCV_Frequencies2$average != 0),]
+write.table(CCV_Frequencies3, file="CCV_Frequencies3", sep="\t", row.names=F, col.names = F)
+# group data by ranges and normalize number of sites needs to be normalized by population into a proportion
+freq257 = hist(CCV_Frequencies3$`257`, breaks=br, include.lowest=TRUE, plot=FALSE)
+freq257_counts = data.frame(range = ranges, frequency = freq257$counts)
+freq257_counts$frequency <- freq257_counts$frequency/sum(freq257_counts$frequency)
+freq10 = hist(CCV_Frequencies3$`10`, breaks=br, include.lowest=TRUE, plot=FALSE)
+freq10_counts = data.frame(range = ranges, frequency = freq10$counts)
+freq10_counts$frequency <- freq10_counts$frequency/sum(freq10_counts$frequency)
+freq16 = hist(CCV_Frequencies3$`16`, breaks=br, include.lowest=TRUE, plot=FALSE)
+freq16_counts = data.frame(range = ranges, frequency = freq16$counts)
+freq16_counts$frequency <- freq16_counts$frequency/sum(freq16_counts$frequency)
+freq258 = hist(CCV_Frequencies3$`258`, breaks=br, include.lowest=TRUE, plot=FALSE)
+freq258_counts = data.frame(range = ranges, frequency = freq258$counts)
+freq258_counts$frequency <- freq258_counts$frequency/sum(freq258_counts$frequency)
+freq262 = hist(CCV_Frequencies3$`262`, breaks=br, include.lowest=TRUE, plot=FALSE)
+freq262_counts = data.frame(range = ranges, frequency = freq262$counts)
+freq262_counts$frequency <- freq262_counts$frequency/sum(freq262_counts$frequency)
+
+# load in CC II table
+CCXXI_Frequencies2 <- read_delim("CCXXI_Frequencies2",  "\t", escape_double = FALSE, col_names = FALSE, trim_ws = TRUE)
+# calculate and add mean site frequency across samples
+CCXXI_Frequencies2$avg <- rowMeans(CCXXI_Frequencies2[,2:3])
+# add column names
+colnames(CCXXI_Frequencies2) <- c("site", "267", "24", "average")
+# remove invariant sites (keep sites where the average isn't 0)
+CCXXI_Frequencies3 <- CCXXI_Frequencies2[which(CCXXI_Frequencies2$average != 0),]
+write.table(CCXXI_Frequencies3, file="CCXXI_Frequencies3", sep="\t", row.names=F, col.names = F)
+# group data by ranges and normalize number of sites needs to be normalized by population into a proportion
+freq24 = hist(CCXXI_Frequencies3$`24`, breaks=br, include.lowest=TRUE, plot=FALSE)
+freq24_counts = data.frame(range = ranges, frequency = freq24$counts)
+freq24_counts$frequency <- freq24_counts$frequency/sum(freq24_counts$frequency)
+freq267 = hist(CCXXI_Frequencies3$`267`, breaks=br, include.lowest=TRUE, plot=FALSE)
+freq267_counts = data.frame(range = ranges, frequency = freq267$counts)
+freq267_counts$frequency <- freq267_counts$frequency/sum(freq267_counts$frequency)
+
+
+# gather the data tables populations
+# CCII Davis and Bozeman
+CCII_D <- data.frame(freq10_counts$range, freq1_counts$frequency, freq2_counts$frequency, freq7_counts$frequency)
+colnames(CCII_D) <- c("range", "F18", "F28", "F58")
+write.table(CCII_D, file="CCII_D", sep="\t", row.names=F, col.names = T)
+CCII_D_melt <- melt(CCII_D)
+write.table(CCII_D_melt, file="CCII_D_melt", sep="\t", row.names=F, col.names = T)
+
+CCII_B <- data.frame(freq10_counts$range, freq250_counts$frequency, freq255_counts$frequency)
+colnames(CCII_B) <- c("range", "F27", "F50")
+write.table(CCII_B, file="CCII_B", sep="\t", row.names=F, col.names = T)
+CCII_B_melt <- melt(CCII_B)
+write.table(CCII_B_melt, file="CCII_B_melt", sep="\t", row.names=F, col.names = T)
+
+# CCV Davis and Bozeman
+CCV_D <- data.frame(freq10_counts$range, freq257_counts$frequency, freq10_counts$frequency, freq16_counts$frequency)
+colnames(CCV_D) <- c("range", "F6", "F25", "F42")
+write.table(CCV_D, file="CCV_D", sep="\t", row.names=F, col.names = T)
+CCV_D_melt <- melt(CCV_D)
+write.table(CCV_D_melt, file="CCV_D_melt", sep="\t", row.names=F, col.names = T)
+
+CCV_B <- data.frame(freq10_counts$range, freq258_counts$frequency, freq262_counts$frequency)
+colnames(CCV_B) <- c("range", "F6", "F25")
+write.table(CCV_B, file="CCV_B", sep="\t", row.names=F, col.names = T)
+CCV_B_melt <- melt(CCV_B)
+write.table(CCV_B_melt, file="CCV_B_melt", sep="\t", row.names=F, col.names = T)
+
+# CCXXI Davis
+CCXXI <- data.frame(freq10_counts$range, freq267_counts$frequency, freq24_counts$frequency)
+colnames(CCXXI) <- c("range", "F11 D", "F25 D")
+write.table(CCXXI, file="CCXXI", sep="\t", row.names=F, col.names = T)
+CCXXI_melt <- melt(CCXXI)
+write.table(CCXXI_melt, file="CCXXI_melt", sep="\t", row.names=F, col.names = T)

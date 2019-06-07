@@ -83,5 +83,10 @@ paste 7A 7B > 7
 
 
 # then paste together the relevant populations > Variant
-paste 10_freq 16_freq 1_freq 24_freq 250_freq 255_freq 257_freq 258_freq 262_freq 267_freq 2_freq 7_freq > Frequencies
-cut -f1,2,4,6,8,10,12,14,16,18,20,22,24 Frequencies > Frequencies2
+paste 257_freq 10_freq 16_freq 258_freq 262_freq > CCV_Frequencies
+paste 1_freq 2_freq 7_freq 250_freq 255_freq > CCII_Frequencies
+paste 267_freq 24_freq > CCXXI_Frequencies
+
+cut -f1,2,4,6,8,10 CCV_Frequencies > CCV_Frequencies2
+cut -f1,2,4,6,8,10 CCII_Frequencies > CCII_Frequencies2
+cut -f1,2,4 CCXXI_Frequencies > CCXXI_Frequencies2
