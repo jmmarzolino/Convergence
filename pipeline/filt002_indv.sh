@@ -19,7 +19,7 @@ FILE=/rhome/jmarz001/bigdata/convergent_evolution/data/vcf/filter/conevo.combo.v
 bcftools concat --file-list $LIST -o $FILE
 
 #Extracting per-sample tags
-#FORMAT tags can be extracted using the square brackets [] operator, which loops over all samples. For example, to print the GT field followed by PL field we can write:
+#FORMAT tags can be extracted using the square brackets [] operator, which loops over all samples. For example, to print the GT field:
 bcftools query -f '%CHROM %POS[\t%GT]\n' $FILE -o $FILT/combo.genotype.vcf
 # get the stats for every sample (in sample file) in the vcf file
 SAMP=/rhome/jmarz001/bigdata/convergent_evolution/args/populations
